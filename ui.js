@@ -52,6 +52,21 @@ function render() {
   ctx.stroke();
 }
 
+function reset(seed) {
+  world.reset(seed); kf = kfInit(...world.measure());
+  dots.length = 0; track.length = 0;
+}
+function setp(so, sa, occ) {
+  sObs.value = so; sAcc.value = sa; occBox.checked = occ; strip.on = occ; params();
+}
+const presets = {              // each teaches one thing
+  noisy:   () => { setp(35, 25, false); reset(11); },
+  occlude: () => { setp(12, 25, true); strip.x = W*0.58; reset(1); },
+  ghost:   () => { setp(10, 1, false); reset(5); },       // Q≈0 meets a wall
+  kidnap:  () => { setp(12, 25, false); world.kidnap(); },
+};
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => presets[b.dataset.preset]());
+
 let drag = false;
 canvas.onpointerdown = e => { if (strip.on && Math.abs(e.offsetX - strip.x) < strip.w/2) drag = true; };
 canvas.onpointermove = e => { if (drag) strip.x = e.offsetX; };

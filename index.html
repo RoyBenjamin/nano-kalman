@@ -7,6 +7,12 @@
 <main>
   <h1>nano-kalman</h1>
   <canvas id="c"></canvas>
+  <div class="presets">
+    <button data-preset="noisy">noisy sensor</button>
+    <button data-preset="occlude">occlusion</button>
+    <button data-preset="ghost">overconfident model</button>
+    <button data-preset="kidnap">kidnap</button>
+  </div>
   <div class="controls">
     <label>σ_obs — trust the sensor
       <input id="sobs" type="range" min="1" max="40" step="1" value="12">
