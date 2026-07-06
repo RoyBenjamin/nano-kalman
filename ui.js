@@ -5,6 +5,9 @@ canvas.style.width = W+'px'; canvas.style.height = HGT+'px';
 const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
 
 const sObs = document.getElementById('sobs'), sAcc = document.getElementById('sacc');
+const strip = { x: W*0.58, w: 150, on: false };
+const occBox = document.getElementById('occ');
+occBox.onchange = () => strip.on = occBox.checked;
 const readout = id => document.getElementById(id);
 function params() { world.sigObs = +sObs.value; world.sigA = +sAcc.value; }
 sObs.oninput = sAcc.oninput = params; params();
@@ -15,17 +18,22 @@ const dots = [], track = [];
 function step() {
   world.step(DT);
   kfPredict(kf, DT, world.sigA);
-  const z = world.measure();
-  const { nu } = kfUpdate(kf, z, world.sigObs);
-  readout('innov').textContent = Math.hypot(...nu).toFixed(1) + ' px';
-  dots.push(z);
-  track.push([kf.x[0], kf.x[1]]);
-  if (dots.length > 90) dots.shift();
-  if (track.length > 200) track.shift();
+  if (strip.on && Math.abs(world.x[0] - strip.x) < strip.w/2) {
+    readout('innov').textContent = '— (occluded)';   // no measurement: predict only,
+  } else {                                           // never feed z = 0
+    const z = world.measure();
+    const { nu } = kfUpdate(kf, z, world.sigObs);
+    readout('innov').textContent = Math.hypot(...nu).toFixed(1) + ' px';
+    dots.push(z); if (dots.length > 90) dots.shift();
+  }
+  track.push([kf.x[0], kf.x[1]]); if (track.length > 200) track.shift();
 }
 
 function render() {
   ctx.fillStyle = '#0B0E14'; ctx.fillRect(0, 0, W, HGT);
+  if (strip.on) {                                            // the dark zone
+    ctx.fillStyle = 'rgba(20,25,34,0.9)'; ctx.fillRect(strip.x - strip.w/2, 0, strip.w, HGT);
+  }
   ctx.fillStyle = 'rgba(230,234,242,0.25)';                  // true ball, faint
   ctx.beginPath(); ctx.arc(world.x[0], world.x[1], BALL, 0, 7); ctx.fill();
   dots.forEach(([x, y], i) => {                              // measurement scatter
@@ -35,7 +43,19 @@ function render() {
   ctx.strokeStyle = '#4FD6C4'; ctx.lineWidth = 2;            // the belief, solid
   ctx.beginPath(); track.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
   ctx.stroke();
+  const a = kf.P[0], b = kf.P[1], c = kf.P[5];               // 95% ellipse from the
+  const m = (a+c)/2, d = Math.hypot((a-c)/2, b);             // position block of P
+  ctx.strokeStyle = 'rgba(79,214,196,0.55)'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.ellipse(kf.x[0], kf.x[1], 2*Math.sqrt(m+d), 2*Math.sqrt(Math.max(m-d, 1e-9)),
+              0.5*Math.atan2(2*b, a-c), 0, 7);
+  ctx.stroke();
 }
+
+let drag = false;
+canvas.onpointerdown = e => { if (strip.on && Math.abs(e.offsetX - strip.x) < strip.w/2) drag = true; };
+canvas.onpointermove = e => { if (drag) strip.x = e.offsetX; };
+canvas.onpointerup = () => drag = false;
 
 let acc = 0, last = performance.now();
 function frame(now) {
