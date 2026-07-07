@@ -31,8 +31,7 @@
 body { background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, sans-serif; }
 main { max-width: 920px; margin: 0 auto; padding: var(--s6) var(--s4) var(--s4); }
 header { display: flex; align-items: baseline; gap: var(--s4); flex-wrap: wrap; }
-h1 { font-family: var(--disp); font-weight: 600; font-size: 28px; letter-spacing: -0.01em; }
-.tag { color: var(--muted); font-family: var(--disp); font-style: italic; font-size: 16px; }
+h1 { font-family: var(--disp); font-weight: 600; font-size: 30px; letter-spacing: -0.01em; }
 .tabs { display: flex; gap: var(--s3); margin: var(--s4) 0 var(--s4);
   border-bottom: 1px solid var(--edge); }
 .tab { background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0;
@@ -70,11 +69,12 @@ output { font-family: var(--mono); font-variant-numeric: tabular-nums;
 .readout strong { font: 20px var(--mono); font-variant-numeric: tabular-nums; color: var(--accent); }
 #cap { color: var(--muted); font-family: var(--ui); font-size: 13.5px;
   margin-top: var(--s2); min-height: 3em; }
-article { max-width: 68ch; }
-article h2 { font-family: var(--disp); font-weight: 600; font-size: 21px;
-  margin: var(--s6) 0 var(--s3); }
-article p { font-family: var(--serif); font-size: 17px; line-height: 1.6;
-  margin-bottom: var(--s3); }
+article { max-width: 62ch; }
+article h2 { font-family: var(--disp); font-weight: 600; font-size: 22px;
+  margin: var(--s8) 0 var(--s4); }
+article h2:first-child { margin-top: var(--s4); }
+article p { font-family: var(--serif); font-size: 18px; line-height: 1.75;
+  margin-bottom: var(--s4); }
 article strong { font-weight: 600; }
 article a { color: var(--accent); }
 article img { width: 100%; border: 1px solid var(--edge); border-radius: 6px;
@@ -91,7 +91,6 @@ footer a { color: var(--muted); }
 <main>
   <header>
     <h1>nano-kalman</h1>
-    <p class="tag">agents act on beliefs, not observations</p>
   </header>
   <nav class="tabs" role="tablist">
     <button class="tab on" id="t-idea" role="tab" aria-selected="true">the idea</button>
@@ -102,14 +101,14 @@ footer a { color: var(--muted); }
     <h2>What is this?</h2>
     <p>A <strong>Kalman filter</strong> is an algorithm that combines a predictive model ("things keep
     moving the way they were") with noisy measurements ("the sensor says it is roughly here") to produce
-    the statistically best estimate of something you cannot observe directly. Published by Rudolf Kálmán
-    in 1960, it navigated Apollo to the Moon and still runs inside every drone, rocket, GPS receiver, and
-    robot vacuum. This page is a live one, tracking a ball: the whole implementation is
+    the statistically best estimate of something you cannot observe directly.</p>
+    <p>Published by Rudolf Kálmán in 1960, it navigated Apollo to the Moon and still runs inside every
+    drone, rocket, GPS receiver, and robot vacuum.</p>
+    <p>This page is a live one, tracking a ball. The whole implementation is
     <a href="kalman.js">50 lines of vanilla JavaScript</a>, and the sandbox exists to let you feel what
-    those lines do.</p>
-    <p>The filter never knows where the ball is. It maintains a <em>belief</em>: a best guess plus an honest
-    account of its own uncertainty, updated sixty times a second. The argument this demo makes is the point
-    of the whole series: an agent should act on that belief, not on the raw, lying observations.</p>
+    those lines do. The filter never knows where the ball is: it maintains a <em>belief</em>, a best guess
+    plus an honest account of its own uncertainty, updated sixty times a second. Everything you will see
+    on the canvas is that belief, made visible.</p>
     <h2>What a Kalman filter does, in two moves</h2>
     <p><strong>Predict.</strong> Each frame, push the belief through simple physics: position moves by
     velocity, and the uncertainty grows a little, because no model of the world is perfect.</p>
