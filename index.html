@@ -57,8 +57,9 @@ canvas { display: block; width: 100%; border: 1px solid var(--edge); border-radi
 .presets button:hover { border-color: var(--muted); }
 .presets button:active, .presets button.on { border-color: var(--accent); color: var(--accent); }
 .sliders { flex: 1; min-width: 260px; display: grid; gap: var(--s2); }
-.sliders label { display: grid; grid-template-columns: auto 1fr 2.5em; gap: var(--s3);
+.sliders label { display: grid; grid-template-columns: 13em 1fr 2.5em; gap: var(--s3);
   align-items: center; font-family: var(--ui); font-size: 13px; white-space: nowrap; }
+.sliders small { display: block; color: var(--muted); font-size: 11px; }
 .sliders .chk { display: flex; gap: var(--s2); color: var(--muted); }
 input[type=range] { accent-color: var(--accent); min-width: 100px; }
 input[type=checkbox] { accent-color: var(--accent); }
@@ -119,7 +120,8 @@ footer a { color: var(--muted); }
 new belief = prediction + K · (measurement − prediction)</pre>
     <p>A sharp sensor drives K toward 1: believe the dots. A noisy sensor drives K toward 0: trust the
     physics. The two σ sliders in the sandbox set exactly those two uncertainties, which is why they are
-    the whole control panel. Everything the filter does is a precision-weighted argument between them:</p>
+    the whole control panel: raising a slider admits more noise from that source, which means trusting
+    it less. Everything the filter does is a precision-weighted argument between them:</p>
     <img src="media/GainBlend.gif" alt="Two Gaussians blending into a posterior as the Kalman gain slides between trusting the model and trusting the sensor" loading="lazy">
     <p>When the ball enters the occlusion strip, measurements stop and only predict runs. The uncertainty
     ellipse balloons because the filter is honest about what it no longer knows, and the first measurement
@@ -153,11 +155,11 @@ new belief = prediction + K · (measurement − prediction)</pre>
         <button data-preset="kidnap">kidnap</button>
       </div>
       <div class="sliders">
-        <label>σ_obs · trust the sensor
+        <label><span>σ_obs · sensor noise<small>higher = trust the sensor less</small></span>
           <input id="sobs" type="range" min="1" max="40" step="1" value="12">
           <output id="vobs">12</output>
         </label>
-        <label>σ_a · trust the model
+        <label><span>σ_a · model noise<small>higher = trust the model less</small></span>
           <input id="sacc" type="range" min="0" max="60" step="1" value="25">
           <output id="vacc">25</output>
         </label>

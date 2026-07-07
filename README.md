@@ -15,7 +15,7 @@ git clone https://github.com/RoyBenjamin/nano-kalman.git
 open nano-kalman/index.html
 ```
 
-On the canvas: the faint circle is the true ball, the grey squares are noisy position measurements, and the teal track is the filter's belief, wearing its 95% uncertainty ellipse. Two sliders control everything that matters: "σ_obs · trust the sensor" and "σ_a · trust the model". Four presets each teach one thing: "noisy sensor", "occlusion", "overconfident model", "kidnap". The readout in the corner shows the innovation, the distance between what the sensor said and what the filter expected.
+On the canvas: the faint circle is the true ball, the grey squares are noisy position measurements, and the teal track is the filter's belief, wearing its 95% uncertainty ellipse. Two sliders control everything that matters: "σ_obs · sensor noise" and "σ_a · model noise"; raising one admits more noise from that source, which means trusting it less. Four presets each teach one thing: "noisy sensor", "occlusion", "overconfident model", "kidnap". The readout in the corner shows the innovation, the distance between what the sensor said and what the filter expected.
 
 A thirty-second tour:
 
