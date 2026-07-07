@@ -138,8 +138,8 @@ ffmpeg -i manim/out/videos/scenes/720p30/GainBlend.mp4 -vf "fps=18,scale=720:-1:
 |---|---|---|
 | `kalman.js` | 50 | Predict, update, 2×2 inverse. The whole filter |
 | `world.js` | 34 | True dynamics, noisy measurements, seeded RNG |
-| `ui.js` | 84 | Render loop, uncertainty ellipse, presets |
-| `index.html` | 98 | Canvas, sliders, preset buttons (50 of these lines are the style block) |
+| `ui.js` | 94 | Render loop, uncertainty ellipse, presets, preset captions |
+| `index.html` | 149 | Canvas, sliders, preset buttons, and the on-page explainer (62 lines of style block and the essay prose are presentation, outside the core budget) |
 | `manim/scenes.py` | 98 | The two README figures; documentation tooling, outside the core budget |
 
 Zero dependencies at runtime. Python appears only as documentation tooling, uv-managed under the `docs` group.

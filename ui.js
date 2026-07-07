@@ -68,7 +68,17 @@ const presets = {              // each teaches one thing
   ghost:   () => { setp(10, 1, false); reset(5); },       // Q≈0 meets a wall
   kidnap:  () => { setp(12, 25, false); world.kidnap(); },
 };
-document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => presets[b.dataset.preset]());
+const CAP = {
+  noisy: 'σ_obs at 35: the dots are a storm, the belief is calm. Filtering is a principled average over time.',
+  occlude: 'Measurements stop inside the strip. The filter predicts blind, the ellipse balloons, and the first dot on the far side snaps it tight. Drag the strip.',
+  ghost: 'σ_a near zero declares the model perfect. But the model does not know about walls: the estimate sails through like a ghost, then slowly concedes to the dots.',
+  kidnap: 'The ball teleported. The innovation spikes, the gain does its job, and the belief gets dragged back to the evidence.',
+};
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => {
+  presets[b.dataset.preset]();
+  readout('cap').textContent = CAP[b.dataset.preset];
+  document.querySelectorAll('[data-preset]').forEach(x => x.classList.toggle('on', x === b));
+});
 
 let drag = false;
 canvas.onpointerdown = e => { if (strip.on && Math.abs(canvasX(e) - strip.x) < strip.w/2) drag = true; };
