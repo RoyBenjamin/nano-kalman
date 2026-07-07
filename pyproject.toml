@@ -1,7 +1,11 @@
 [project]
 name = "nano-kalman"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.14"
+description = "A Kalman filter from scratch; manim lives in the docs group"
+requires-python = ">=3.12"
 dependencies = []
+
+[dependency-groups]
+docs = [
+    "manim>=0.20.1",
+]
