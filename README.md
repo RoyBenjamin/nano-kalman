@@ -6,7 +6,7 @@ A Kalman filter from scratch, tracking a noisy ball in the browser. The filter i
 
 ## Run it
 
-Live sandbox: **https://roybenjamin.github.io/nano-kalman/**
+Live sandbox: **https://roybenjamin.com/nano-kalman/**
 
 Or run it from a clone. There is no build step, no server, and no dependency:
 
