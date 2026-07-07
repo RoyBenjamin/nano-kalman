@@ -1,15 +1,18 @@
 // ui.js — render loop: fixed-timestep physics, rAF rendering. y-down everywhere.
 const canvas = document.getElementById('c'), dpr = devicePixelRatio || 1;
-canvas.width = W*dpr; canvas.height = HGT*dpr;
-canvas.style.width = W+'px'; canvas.style.height = HGT+'px';
+canvas.width = W*dpr; canvas.height = HGT*dpr;   // CSS scales it responsively
 const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+const canvasX = e => e.offsetX * W / canvas.clientWidth;
 
 const sObs = document.getElementById('sobs'), sAcc = document.getElementById('sacc');
 const strip = { x: W*0.58, w: 150, on: false };
 const occBox = document.getElementById('occ');
 occBox.onchange = () => strip.on = occBox.checked;
 const readout = id => document.getElementById(id);
-function params() { world.sigObs = +sObs.value; world.sigA = +sAcc.value; }
+function params() {
+  world.sigObs = +sObs.value; world.sigA = +sAcc.value;
+  readout('vobs').textContent = sObs.value; readout('vacc').textContent = sAcc.value;
+}
 sObs.oninput = sAcc.oninput = params; params();
 
 let kf = kfInit(...world.measure());
@@ -19,7 +22,7 @@ function step() {
   world.step(DT);
   kfPredict(kf, DT, world.sigA);
   if (strip.on && Math.abs(world.x[0] - strip.x) < strip.w/2) {
-    readout('innov').textContent = '— (occluded)';   // no measurement: predict only,
+    readout('innov').textContent = 'occluded';       // no measurement: predict only,
   } else {                                           // never feed z = 0
     const z = world.measure();
     const { nu } = kfUpdate(kf, z, world.sigObs);
@@ -68,8 +71,8 @@ const presets = {              // each teaches one thing
 document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => presets[b.dataset.preset]());
 
 let drag = false;
-canvas.onpointerdown = e => { if (strip.on && Math.abs(e.offsetX - strip.x) < strip.w/2) drag = true; };
-canvas.onpointermove = e => { if (drag) strip.x = e.offsetX; };
+canvas.onpointerdown = e => { if (strip.on && Math.abs(canvasX(e) - strip.x) < strip.w/2) drag = true; };
+canvas.onpointermove = e => { if (drag) strip.x = canvasX(e); };
 canvas.onpointerup = () => drag = false;
 
 let acc = 0, last = performance.now();
