@@ -35,6 +35,20 @@ Update:    K  = P⁻ Hᵀ (H P⁻ Hᵀ + R)⁻¹
            P  = (I − K H) P⁻
 ```
 
+Every symbol, once (units are pixels and seconds):
+
+| Symbol | What it is |
+|---|---|
+| `x̂` | the belief's mean: the best guess of the state `[px, py, vx, vy]`. The minus in `x̂⁻` means "after predict, before evidence" |
+| `P` | the belief's covariance, a 4×4 matrix: how unsure the guess is, and in which directions. `P⁻` likewise |
+| `F` | the dynamics: one frame of constant-velocity physics, `dt = 1/60 s` |
+| `Q` | process noise added each predict: how wrong the model is allowed to be per frame. Scaled by σ_a (px/s²), the "model noise" slider |
+| `z` | the measurement: the sensor's noisy report of position |
+| `H` | picks out what the sensor actually sees: position, not velocity |
+| `R` | sensor noise covariance. Scaled by σ_obs (px), the "sensor noise" slider |
+| `ν` | the innovation `z − H x̂⁻`: the surprise, how far the measurement landed from where the belief expected it |
+| `K` | the Kalman gain: what fraction of the surprise to accept |
+
 The rest of this README derives them from one idea, then shows where they break.
 
 ### Beliefs stay Gaussian under linear maps
